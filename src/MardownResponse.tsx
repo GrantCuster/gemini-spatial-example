@@ -3,6 +3,7 @@ import { useAtom } from "jotai";
 import Markdown from "react-markdown";
 import { replaceLinkFormat } from "./utils";
 import { useEffect, useRef } from "react";
+import breaks from "remark-breaks";
 
 export function MardownResponse() {
   const [, setActiveHoverBox] = useAtom(activerHoverBoxAtom);
@@ -57,7 +58,7 @@ export function MardownResponse() {
 
   return (
     <div ref={markdownWrapperRef}>
-      <Markdown className="w-full pb-4 mx-auto prose text-black">
+      <Markdown className="w-full pb-4 mx-auto prose text-black" remarkPlugins={breaks}>
         {replaceLinkFormat(response)}
       </Markdown>
     </div>

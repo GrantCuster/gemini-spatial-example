@@ -166,7 +166,7 @@ function App() {
               </div>
             </div>
             {responseFormat === "raw" ? (
-              <div>{response}</div>
+              <div className="whitespace-pre-wrap">{response}</div>
             ) : (
               <MardownResponse />
             )}
