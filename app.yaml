@@ -1,0 +1,4 @@
+runtime: nodejs20
+service: gemini-spatial-example
+
+default_expiration: "0s"
