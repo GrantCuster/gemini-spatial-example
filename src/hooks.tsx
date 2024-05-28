@@ -4,7 +4,6 @@ import { canvasRefAtom } from "./atoms";
 
 export function useSaveCanvasToLocalStorage() {
   const [canvasRefA] = useAtom(canvasRefAtom);
-  console.log('image saves')
   return function () {
     localStorage.setItem(
       "canvas-1",
@@ -20,7 +19,6 @@ export function useDrawImageToCanvas() {
   return function drawImageToCanvas(imageData: string) {
     const image = new Image();
     image.onload = function () {
-      console.log('image loads')
       const c = canvasRefA.current!;
       const ctx = c.getContext("2d")!;
       const imgRatio = image.width / image.height;
