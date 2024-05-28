@@ -6,15 +6,12 @@ import {
   visibleTextPromptAtom,
   activeModelAtom,
   responseFormatAtom,
-  activerHoverBoxAtom,
 } from "./atoms";
 import { useAtom } from "jotai";
-import Markdown from "react-markdown";
 import { predictImage } from "./modelUtils";
 import { useHandleDragAndDropImage } from "./hooks";
 import { Canvas } from "./Canvas";
-import { replaceLinkFormat } from "./utils";
-import { useEffect, useRef } from "react";
+import { MardownResponse } from "./MardownResponse";
 
 function App() {
   const [prompt, setPrompt] = useAtom(promptAtom);
@@ -30,15 +27,15 @@ function App() {
 
   return (
     <div className="flex h-[100dvh] overflow-auto flex-col">
-      <div className="max-w-[530px] mx-auto flex pt-4 px-2 flex-col gap-3">
+      <div className="max-w-[530px] mx-auto flex pt-4 px-2 flex-col gap-3 pb-8">
         <div className="">
-          <span className="font-bold">Gemini Spatial Example</span> using{" "}
+          <span className="font-bold">Gemini Spatial Example</span> using the{" "}
           <a
             href="https://ai.google.dev/"
             target="_blank"
             className="underline"
           >
-            Gemini
+            Gemini API
           </a>
         </div>
         <div className="flex gap-2 -my-2 text-sm">
@@ -114,8 +111,17 @@ function App() {
                     prompt,
                     activeModel,
                   );
-                  const val = res.text;
-                  setResponse(val);
+                  if (res.text === undefined) {
+                    setResponse("");
+                    alert(
+                      "Something went wrong: " +
+                        res.error.message +
+                        " Try again.",
+                    );
+                  } else {
+                    const val = res.text;
+                    setResponse(val);
+                  }
                 } catch (e) {
                   setResponse("");
                   // @ts-expect-error need to set type
@@ -167,66 +173,6 @@ function App() {
           </div>
         ) : null}
       </div>
-    </div>
-  );
-}
-
-function MardownResponse() {
-  const [, setActiveHoverBox] = useAtom(activerHoverBoxAtom);
-  const markdownWrapperRef = useRef<HTMLDivElement | null>(null);
-  const [response] = useAtom(responseAtom);
-
-  useEffect(() => {
-    function handleMouseOver(event: MouseEvent) {
-      // Check if the target of the event is an 'a' element
-      const target = event.target as HTMLElement;
-      if (target && target.tagName === "A") {
-        const targetRef = target.getAttribute("href");
-        if (targetRef && targetRef.startsWith("#bb-")) {
-          setActiveHoverBox(targetRef.replace("#bb-", ""));
-        }
-      }
-    }
-    function handleMouseEnter() {
-      setActiveHoverBox("active");
-    }
-    function handleMouseLeave() {
-      setActiveHoverBox(null);
-    }
-    if (markdownWrapperRef.current) {
-      markdownWrapperRef.current.addEventListener("mouseover", handleMouseOver);
-      markdownWrapperRef.current.addEventListener(
-        "mouseenter",
-        handleMouseEnter,
-      );
-      markdownWrapperRef.current.addEventListener(
-        "mouseleave",
-        handleMouseLeave,
-      );
-    }
-    return () => {
-      if (markdownWrapperRef.current) {
-        markdownWrapperRef.current.removeEventListener(
-          "mouseover",
-          handleMouseOver,
-        );
-        markdownWrapperRef.current.removeEventListener(
-          "mouseenter",
-          handleMouseEnter,
-        );
-        markdownWrapperRef.current.removeEventListener(
-          "mouseleave",
-          handleMouseLeave,
-        );
-      }
-    };
-  }, [markdownWrapperRef, setActiveHoverBox]);
-
-  return (
-    <div ref={markdownWrapperRef}>
-      <Markdown className="w-full pb-4 mx-auto prose text-black">
-        {replaceLinkFormat(response)}
-      </Markdown>
     </div>
   );
 }

@@ -29,6 +29,7 @@ export const predictImage = async (
       throw fetchError;
     }
   } catch (error) {
+    console.log(error)
     if (error.fetchResult) {
       console.error(
         `HTTP request failed with status code ${error.fetchResult.error.code}`,
