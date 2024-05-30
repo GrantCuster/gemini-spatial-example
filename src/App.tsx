@@ -172,6 +172,9 @@ function App() {
             )}
           </div>
         ) : null}
+        <div>
+          <a href="https://github.com/GrantCuster/gemini-spatial-example" target="_blank" className="underline" rel="noreferrer">Github repo</a>
+        </div>
       </div>
     </div>
   );
