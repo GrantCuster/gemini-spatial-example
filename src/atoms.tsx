@@ -1,9 +1,10 @@
 import { atomWithStorage } from "jotai/utils";
 import { atom } from "jotai";
+import { defaultPrompt } from "./consts";
 
 export const promptAtom = atomWithStorage<string>(
   "prompt-atom-9",
-  "Tell me a story about the objects present in the image. When you reference an object put its name and bounding box in the format: [object name](y_min x_min y_max x_max)."
+  defaultPrompt
 );
 export const responseAtom = atomWithStorage<string>("response-atom-1", "");
 export const inkColorAtom = atomWithStorage<string>("ink-color-1", "#000000");

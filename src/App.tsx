@@ -12,6 +12,7 @@ import { predictImage } from "./modelUtils";
 import { useHandleDragAndDropImage } from "./hooks";
 import { Canvas } from "./Canvas";
 import { MardownResponse } from "./MardownResponse";
+import { defaultPrompt } from "./consts";
 
 function App() {
   const [prompt, setPrompt] = useAtom(promptAtom);
@@ -68,14 +69,25 @@ function App() {
         <div className="flex flex-col gap-1">
           <div className="flex items-center justify-between">
             <div className="text-sm">Prompt</div>
-            <button
-              className="text-sm underline"
-              onClick={() => {
-                setVisibleTextPrompt(!visibleTextPrompt);
-              }}
-            >
-              {visibleTextPrompt ? "hide" : "show"}
-            </button>
+            <div className="flex gap-2">
+              {prompt !== defaultPrompt ? (
+                <button
+                  className="text-sm underline"
+                  onClick={() => {
+                    setPrompt(defaultPrompt);
+                  }}
+                >reset</button>
+              ) : null}
+
+              <button
+                className="text-sm underline"
+                onClick={() => {
+                  setVisibleTextPrompt(!visibleTextPrompt);
+                }}
+              >
+                {visibleTextPrompt ? "hide" : "show"}
+              </button>
+            </div>
           </div>
           {visibleTextPrompt ? (
             <textarea
@@ -114,9 +126,7 @@ function App() {
                   if (res.text === undefined) {
                     setResponse("");
                     alert(
-                      "Something went wrong: " +
-                        res.error.message +
-                        " Try again.",
+                      "Something went wrong. Most likely we hit the rate limit. If you're using the Pro model, you can try Flash. If Flash is also not working, you can clone and set up locally or try again later.",
                     );
                   } else {
                     const val = res.text;
@@ -173,7 +183,18 @@ function App() {
           </div>
         ) : null}
         <div>
-          <a href="https://github.com/GrantCuster/gemini-spatial-example" target="_blank" className="underline" rel="noreferrer">Github repo</a>
+          <div className="italic text-sm">
+            Public version of this is subject to rate limits across users. Clone
+            and use with your own API key to get more reliable results.
+          </div>
+          <a
+            href="https://github.com/GrantCuster/gemini-spatial-example"
+            target="_blank"
+            className="underline"
+            rel="noreferrer"
+          >
+            Github repo
+          </a>
         </div>
       </div>
     </div>
